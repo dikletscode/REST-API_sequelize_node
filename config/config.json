@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "qwerty123",
+    "database": "ecommerce",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "admin",
+    "password": "qwerty123",
+    "database": "ecommerce",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "admin",
+    "password": "qwerty123",
+    "database": "ecommerce",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
