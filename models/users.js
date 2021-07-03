@@ -1,6 +1,8 @@
 "use strict";
 const { Model, UUIDV4 } = require("sequelize");
 const bcrypt = require("bcrypt");
+const accessToken = require("../auth/accesToken");
+
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
     /**
@@ -12,6 +14,18 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(Role, { foreignKey: "role_id", as: "fk_role" });
     }
   }
+  Users.validate = (password, hashed, data) => {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, hashed, (err, response) => {
+        if (response) {
+          let token = accessToken(data[0].user_id);
+          resolve({ msg: "login success", token: token, data: data });
+        } else {
+          reject("wrong email or password");
+        }
+      });
+    });
+  };
   Users.init(
     {
       user_id: {
@@ -40,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     },
+
     {
       timestamps: false,
       createdAt: false,
@@ -52,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
           user.password = hash;
         },
       },
+
       sequelize,
     }
   );
