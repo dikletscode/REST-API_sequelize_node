@@ -1,7 +1,17 @@
 const express = require("express");
-const { Role, User, Detail } = require("../models");
+const { Role, User, Detail, Globalproduct } = require("../models");
 const router = express.Router();
 const { validate, rules } = require("../middleware/validation");
+const jwtVerify = require("../middleware/jwtVerify");
+
+router.get("/", async (req, res) => {
+  try {
+    let data = await Globalproduct.findAll();
+    res.json({ data: data });
+  } catch (error) {
+    res.json({ msg: "error" });
+  }
+});
 
 router.post("/signup", rules(), validate, async (req, res) => {
   const { fullname, username, email, password } = req.body;
@@ -17,6 +27,7 @@ router.post("/signup", rules(), validate, async (req, res) => {
       .then((user) => {
         user.createDetail({});
       });
+    res.json({ msg: "success" });
   } catch (error) {
     res.json({ msg: "Error" });
   }
@@ -33,7 +44,7 @@ router.post("/login", rules(), validate, async (req, res) => {
   }
 });
 
-router.patch("/profile/:uuid", async (req, res) => {
+router.patch("/profile/:uuid", jwtVerify, async (req, res) => {
   let userParams = req.params.uuid;
   const { address, notelp, images } = req.body;
 
