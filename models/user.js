@@ -12,9 +12,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.User, {
-        foreignKey: "roleId",
-      });
+      this.hasOne(models.Detail, { foreignKey: "userId", as: "detail" });
+      this.belongsTo(models.Role, { foreignKey: "roleId" }); //REFERENCES To Role with own Foreign key (roleId)
     }
   }
   User.auth = (password, hashed, data) => {
