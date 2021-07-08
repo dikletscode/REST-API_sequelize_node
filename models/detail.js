@@ -11,8 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
-  Detail.upsert = (value, condition) => {
-    return Detail.findOne({ where: condition }).then((obj) => {
+  Detail.upsert = async (value, condition) => {
+    return await Detail.findOne({
+      where: condition,
+    }).then((obj) => {
       if (obj) return obj.update(value);
       return Detail.create(value);
     });
@@ -25,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      freezeTableName: true,
       tableName: "detailUsers",
       modelName: "Detail",
     }

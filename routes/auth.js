@@ -1,5 +1,5 @@
 const express = require("express");
-const { Role, User, Detail, Globalproduct } = require("../models");
+const { Role, User, Detail, Globalproduct, Product } = require("../models");
 const router = express.Router();
 const { validate, rules } = require("../middleware/validation");
 const jwtVerify = require("../middleware/jwtVerify");
@@ -25,10 +25,12 @@ router.post("/signup", rules(), validate, async (req, res) => {
         password,
       })
       .then((user) => {
+        user.createProduct({});
         user.createDetail({});
       });
     res.json({ msg: "success" });
   } catch (error) {
+    console.log(error);
     res.json({ msg: "Error" });
   }
 });
@@ -44,12 +46,13 @@ router.post("/login", rules(), validate, async (req, res) => {
   }
 });
 
-router.patch("/profile/:uuid", jwtVerify, async (req, res) => {
-  let userParams = req.params.uuid;
+router.patch("/profile/:id", async (req, res) => {
+  let userParams = req.params.id;
   const { address, notelp, images } = req.body;
 
   try {
     await Detail.upsert({ address, notelp, images }, { userId: userParams });
+
     res.send("edit success");
   } catch (error) {
     console.log(error);

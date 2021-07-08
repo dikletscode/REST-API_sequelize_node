@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasOne(models.Detail, { foreignKey: "userId", as: "detail" });
+      this.hasOne(models.Product, { as: "product", foreignKey: "userId" });
+      this.hasOne(models.Detail, { as: "detail", foreignKey: "userId" });
       this.belongsTo(models.Role, { foreignKey: "roleId" }); //REFERENCES To Role with own Foreign key (roleId)
     }
   }
+
   User.auth = (password, hashed, data) => {
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, hashed, (err, result) => {
